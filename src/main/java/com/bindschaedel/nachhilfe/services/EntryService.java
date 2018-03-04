@@ -64,10 +64,18 @@ public class EntryService {
 	}
 	
 	public double getCosts(String name) {
-		return entryRepository.getTotalCost(name);
+		if(name != null) {
+			return entryRepository.getTotalCost(name);
+		}else {
+			return entryRepository.getTotalCostOverall();
+		}
+		
 	}
 	
 	public double getGiven(String name) {
-		return entryRepository.getTotalGiven(name);
+		if(name != null) {
+			return entryRepository.getTotalGiven(name);
+		}
+		return entryRepository.getTotalGivenOverall();
 	}
 }

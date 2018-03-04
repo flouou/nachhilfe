@@ -27,15 +27,19 @@ public class EntryController {
 			, @RequestParam(value="date") String date
 			, @RequestParam(value="cost") double cost
 			, @RequestParam(value="given") double given
-			, Map<String, Iterable<Entry>> model) {
+			, Map<String, Object> model) {
 		
 		model.put("entries", entryService.create(name, date, cost, given));
+		model.put("totalCost", entryService.getCosts(null));
+		model.put("totalGiven", entryService.getGiven(null));
 		return "all-entries";
 	}
 	
 	@GetMapping("/all")
 	public String getAllEntries(Map<String, Object> model){
 		model.put("entries", entryService.getAllEntries());
+		model.put("totalCost", entryService.getCosts(null));
+		model.put("totalGiven", entryService.getGiven(null));
 		return "all-entries";
 	}
 	
@@ -45,9 +49,14 @@ public class EntryController {
 	}
 	
 	@DeleteMapping("/delete")
-	public ResponseEntity<HttpStatus> deleteEntry(@RequestParam(value="id") int id) {
+	public String deleteEntry(@RequestParam(value="id") int id
+			,Map<String, Object> model) {
+		System.out.println(id);
 		entryService.delete(id);
-		return ResponseEntity.ok(HttpStatus.OK);
+		model.put("entries", entryService.getAllEntries());
+		model.put("totalCost", entryService.getCosts(null));
+		model.put("totalGiven", entryService.getGiven(null));
+		return "all-entries";
 	}
 	
 	@PutMapping("/edit")

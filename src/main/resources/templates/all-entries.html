@@ -10,8 +10,7 @@
 </head>
 <body>
 	<div class="container">
-	  <h2>Nachhilfe-Stunden</h2>
-	  <p>blablabla blabla blablabla</p>            
+	  <h2>Nachhilfe-Stunden<span class="pull-right" id="total-result" th:text="${totalCost - totalGiven}"></span></h2>           
 	  <table class="table" id="entry-table">
 	    <thead>
 	      <tr>
@@ -30,8 +29,8 @@
 	    			<td th:text="${entry.given}">...</td>
 	    			<td th:text="${entry.date}">...</td>
 	    			<td>
-	    				<button type="button" class="btn btn-primary" th:id="'edit-' + ${entry.id}"><i class="glyphicon glyphicon-pencil"></i></button>
-	    				<button type="button" class="btn btn-danger" th:id="'delete-' + ${entry.id}"><i class="glyphicon glyphicon-trash"></i></button>
+	    				<button type="button" class="btn btn-primary edit-btn" th:id="'edit-' + ${entry.id}"><i class="glyphicon glyphicon-pencil"></i></button>
+	    				<button type="button" class="btn btn-danger delete-btn" th:id="'delete-' + ${entry.id}"><i class="glyphicon glyphicon-trash"></i></button>
 	    			</td>
 	    		</tr>
 	    	</th:block>
@@ -100,6 +99,24 @@
 				//TODO
 			}).error(function(e){
 				//TODO
+			});
+		});
+		
+		$('.delete-btn').click(function(){
+			var idValue = $(this).attr("id");
+			
+			formattedId = parseInt(idValue.split("-")[1]);
+			console.log(formattedId);
+			$.ajax({
+				method:"DELETE",
+				url:"http://localhost:8080/delete?id="+formattedId,
+				success: function(response){
+					window.location.reload();
+				}
+			}).done(function(){
+				//TODO
+			}).error(function(e){
+				console.log(e.responseText);
 			});
 		});
 	</script>
