@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.bindschaedel.nachhilfe.entities.Entry;
 import com.bindschaedel.nachhilfe.repositories.EntryRepository;
+import com.bindschaedel.nachhilfe.util.DateFormatter;
 
 @Service
 public class EntryService {
@@ -16,14 +17,12 @@ public class EntryService {
 	@Autowired
 	private EntryRepository entryRepository;
 	
-	public Entry create(String name, String date, double cost, double given) {
+	@Autowired
+	private DateFormatter dateFormatter;
+	
+	public Iterable<Entry> create(String name, String date, double cost, double given) {
 		Date entryDate = null;
-		try {
-			entryDate = new SimpleDateFormat("dd/MM/yyyy").parse(date);
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		entryDate = dateFormatter.HTMLtoSQLDate(date);
 		Entry entry = new Entry();
 		entry.setName(name);
 		entry.setDate(entryDate);
@@ -31,7 +30,7 @@ public class EntryService {
 		entry.setGiven(given);
 		entryRepository.save(entry);
 		
-		return entry;
+		return entryRepository.findAll();
 	}
 	
 	public Iterable<Entry> getAllEntries(){
